@@ -1,0 +1,14 @@
+[
+    {
+        "PictureURL": "https://example.com/toy-image.jpg",
+        "ToyName": "Transformer Super Mech Action Figure",
+        "userName": "John Doe",
+        "userEmail": "johndoe@example.com",
+        "Sub-category": "Transformers",
+        "Price": "$29.99",
+        "Rating": "4.5/5",
+        "AvailableQuantity": 50,
+        "DetailDescription": "The Super Mech Action Figure is a must-have for any Transformers fan. This highly detailed action figure stands at 12 inches tall and features intricate articulation, allowing for a wide range of poses. The figure is made of durable plastic and comes with interchangeable accessories, including a blaster and sword. Its design is inspired by the iconic Transformers characters, with a sleek and futuristic look. Whether you're recreating epic battles or displaying it as a collector's item, the Super Mech Action Figure is sure to impress. Don't miss out on adding this fantastic toy to your collection!"
+      }
+      
+]
