@@ -35,8 +35,30 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        client.connect();
         const allToyCollections = client.db("toyMonster").collection("toys");
+       
+
+        // GET Data Using email Query
+
+        app.get('/toys', async (req, res) => {
+            let query = {};
+            // console.log(req.query);
+            if (req.query?.email) {
+                query = { userEmail: req.query.email }
+            }
+            const result = await allToyCollections.find(query).toArray()
+            res.send(result)
+            console.log(result)
+        })
+
+         // GET API of toys read toy
+         app.get("/toys", async (req, res) => {
+            const result = await allToyCollections.find().toArray();
+            res.send(result);
+        })
+
+        //POST API of toys Insert toy by the user
         app.post("/toys", async (req, res) => {
             const toy = req.body;
             const result = await allToyCollections.insertOne(toy);
