@@ -37,38 +37,45 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         client.connect();
         const allToyCollections = client.db("toyMonster").collection("toys");
-       
+
 
         // GET Data Using email Query
         app.get('/toys', async (req, res) => {
             let query = {};
             console.log(req.query);
             if (req.query?.email) {
-              query = { userEmail: req.query.email }
+                query = { userEmail: req.query.email }
             }
             // Sort data by the price
-            if(req.query?.sortBy){
+            if (req.query?.sortBy) {
                 const sortValue = parseInt(req.query.sortBy);
                 const sortOption = {
-                  price: sortValue, // Specify the field name and the sort order
+                    price: sortValue, // Specify the field name and the sort order
                 };
                 const options = {
-                  sort: sortOption, // Pass the sort option to the `sort` field
+                    sort: sortOption, // Pass the sort option to the `sort` field
                 };
                 const result = await allToyCollections.find(query, options).toArray();
                 res.send(result);
-            }else{
+            } else {
                 const result = await allToyCollections.find(query).toArray();
                 res.send(result);
             }
-          });
-          
+        });
 
-         // GET API of toys read toy
-         app.get("/toys", async (req, res) => {
+        // GET API of toys read toy
+        app.get("/toys", async (req, res) => {
             const result = await allToyCollections.find().toArray();
             res.send(result);
         })
+        // GET a specific data
+
+        app.get("/toys/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await allToyCollections.findOne(query);
+            res.send(result);
+          })
 
         //POST API of toys Insert toy by the user
         app.post("/toys", async (req, res) => {
@@ -78,15 +85,34 @@ async function run() {
             console.log(toy)
         })
 
-        // DELETE a particular product 
+        // UPDATE a particular product
 
+        app.patch('/toys/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const newDetails = req.body;
+            console.log(newDetails)
+            const updateDoc = {
+              $set: {
+                price: newDetails.price,
+                quantity: newDetails.quantity,
+                description: newDetails.description,
+              },
+            };
+      
+            const result = await allToyCollections.updateOne(query, updateDoc);
+            console.log(result)
+            res.send(result);
+          })
+
+        // DELETE a particular product 
         app.delete('/toys/:id', async (req, res) => {
             const id = req.params.id;
             console.log(id)
             const query = { _id: new ObjectId(id) }
             const result = await allToyCollections.deleteOne(query)
             res.send(result);
-          })
+        })
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
