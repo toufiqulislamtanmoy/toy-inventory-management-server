@@ -40,17 +40,29 @@ async function run() {
        
 
         // GET Data Using email Query
-
         app.get('/toys', async (req, res) => {
             let query = {};
-            // console.log(req.query);
+            console.log(req.query);
             if (req.query?.email) {
-                query = { userEmail: req.query.email }
+              query = { userEmail: req.query.email }
             }
-            const result = await allToyCollections.find(query).toArray()
-            res.send(result)
-            console.log(result)
-        })
+            // Sort data by the price
+            if(req.query?.sortBy){
+                const sortValue = parseInt(req.query.sortBy);
+                const sortOption = {
+                  price: sortValue, // Specify the field name and the sort order
+                };
+                const options = {
+                  sort: sortOption, // Pass the sort option to the `sort` field
+                };
+                const result = await allToyCollections.find(query, options).toArray();
+                res.send(result);
+            }else{
+                const result = await allToyCollections.find(query).toArray();
+                res.send(result);
+            }
+          });
+          
 
          // GET API of toys read toy
          app.get("/toys", async (req, res) => {
