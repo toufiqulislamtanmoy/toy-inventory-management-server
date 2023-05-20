@@ -37,7 +37,13 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         client.connect();
         const allToyCollections = client.db("toyMonster").collection("toys");
-
+        const feedbackCollection = client.db("toyMonster").collection("feedback");
+        
+        // GET API of all user feed back read
+        app.get("/feedback", async (req, res) => {
+            const result = await feedbackCollection.find().toArray();
+            res.send(result);
+        })
 
         // GET Data Using email Query
         app.get('/toys', async (req, res) => {
@@ -45,7 +51,7 @@ async function run() {
             console.log(req.query);
             if (req.query?.email) {
                 query = { userEmail: req.query.email }
-            }else if(req.query?.subCtg){
+            } else if (req.query?.subCtg) {
                 query = { subCategory: req.query.subCtg }
             }
             // Sort data by the price
@@ -67,7 +73,7 @@ async function run() {
         });
 
 
-        
+
 
         // GET API of toys read toy
         app.get("/toys", async (req, res) => {
@@ -81,7 +87,7 @@ async function run() {
             const query = { _id: new ObjectId(id) }
             const result = await allToyCollections.findOne(query);
             res.send(result);
-          })
+        })
 
         //POST API of toys Insert toy by the user
         app.post("/toys", async (req, res) => {
@@ -99,17 +105,17 @@ async function run() {
             const newDetails = req.body;
             console.log(newDetails)
             const updateDoc = {
-              $set: {
-                price: newDetails.price,
-                quantity: newDetails.quantity,
-                description: newDetails.description,
-              },
+                $set: {
+                    price: newDetails.price,
+                    quantity: newDetails.quantity,
+                    description: newDetails.description,
+                },
             };
-      
+
             const result = await allToyCollections.updateOne(query, updateDoc);
             console.log(result)
             res.send(result);
-          })
+        })
 
         // DELETE a particular product 
         app.delete('/toys/:id', async (req, res) => {
