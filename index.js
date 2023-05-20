@@ -45,6 +45,8 @@ async function run() {
             console.log(req.query);
             if (req.query?.email) {
                 query = { userEmail: req.query.email }
+            }else if(req.query?.subCtg){
+                query = { subCategory: req.query.subCtg }
             }
             // Sort data by the price
             if (req.query?.sortBy) {
@@ -60,8 +62,12 @@ async function run() {
             } else {
                 const result = await allToyCollections.find(query).toArray();
                 res.send(result);
+                console.log(result);
             }
         });
+
+
+        
 
         // GET API of toys read toy
         app.get("/toys", async (req, res) => {
